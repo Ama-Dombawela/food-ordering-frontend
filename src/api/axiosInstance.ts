@@ -1,34 +1,41 @@
 import axios from "axios";
 
+// Shared client for all backend requests.
 const axiosInstance = axios.create({
-    baseURL: "http://localhost:8080",
-    headers: {
-        "Content-Type": "application/json",
-    },
+  baseURL: "http://localhost:8080",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-// Request interceptor - attach JWT token
 axiosInstance.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => Promise.reject(error)
+  (config) => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      // Attach the JWT so protected endpoints can authenticate the request.
+      config.headers = config.headers || {};
+      (config.headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
 );
 
-// Response interceptor - handle 401
 axiosInstance.interceptors.response.use(
-    (response) => response,
-    (error) => {
-        if (error.response?.status === 401) {
-            localStorage.removeItem("token");
-            window.location.href = "/signin";
-        }
-        return Promise.reject(error);
+  (response) => response,
+  (error) => {
+    const status = error?.response?.status;
+    if (status === 401) {
+      // Clear stale auth and send the user back to sign in.
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      window.location.href = "/signin";
     }
+
+    return Promise.reject(error);
+  }
 );
 
 export default axiosInstance;
