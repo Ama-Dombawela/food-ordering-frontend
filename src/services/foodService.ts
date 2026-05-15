@@ -1,37 +1,36 @@
 import axiosInstance from "../api/axiosInstance";
-import type { FoodItem } from "../types";
+import type { FoodItemDTO, FoodItemStatus } from "../types";
 
-// Reads the public food catalog.
-export async function getAllFoods(): Promise<FoodItem[]> {
-  const response = await axiosInstance.get("/api/v1/food-items");
-  return response.data as FoodItem[];
+export async function getAllFoods(): Promise<FoodItemDTO[]> {
+  const response = await axiosInstance.get<{ message: string; data: FoodItemDTO[] }>("/api/foods");
+  return response.data.data;
 }
 
-// Loads a single food item for the detail view.
-export async function getFoodById(id: number): Promise<FoodItem> {
-  const response = await axiosInstance.get(`/api/v1/food-items/${id}`);
-  return response.data as FoodItem;
+export async function getFoodById(id: number): Promise<FoodItemDTO> {
+  const response = await axiosInstance.get<{ message: string; data: FoodItemDTO }>(`/api/foods/${id}`);
+  return response.data.data;
 }
 
-// Filters foods by category.
-export async function getFoodsByCategory(categoryId: number): Promise<FoodItem[]> {
-  const response = await axiosInstance.get(`/api/v1/food-items/category/${categoryId}`);
-  return response.data as FoodItem[];
+export async function getFoodsByCategory(categoryId: number): Promise<FoodItemDTO[]> {
+  const response = await axiosInstance.get<{ message: string; data: FoodItemDTO[] }>(`/api/foods/category/${categoryId}`);
+  return response.data.data;
 }
 
-// Admin-only create endpoint.
-export async function createFood(data: Partial<FoodItem>): Promise<FoodItem> {
-  const response = await axiosInstance.post("/api/v1/food-items", data);
-  return response.data as FoodItem;
+export async function getFoodsByStatus(status: FoodItemStatus): Promise<FoodItemDTO[]> {
+  const response = await axiosInstance.get<{ message: string; data: FoodItemDTO[] }>(`/api/foods/status/${status}`);
+  return response.data.data;
 }
 
-// Admin-only update endpoint.
-export async function updateFood(id: number, data: Partial<FoodItem>): Promise<FoodItem> {
-  const response = await axiosInstance.put(`/api/v1/food-items/${id}`, data);
-  return response.data as FoodItem;
+export async function createFood(data: Omit<FoodItemDTO, "id">): Promise<FoodItemDTO> {
+  const response = await axiosInstance.post<Omit<FoodItemDTO, "id">, { data: { data: FoodItemDTO } }>("/api/foods", data);
+  return response.data.data;
 }
 
-// Admin-only delete endpoint.
+export async function updateFood(id: number, data: Omit<FoodItemDTO, "id">): Promise<FoodItemDTO> {
+  const response = await axiosInstance.put<Omit<FoodItemDTO, "id">, { data: { data: FoodItemDTO } }>(`/api/foods/${id}`, data);
+  return response.data.data;
+}
+
 export async function deleteFood(id: number): Promise<void> {
-  await axiosInstance.delete(`/api/v1/food-items/${id}`);
+  await axiosInstance.delete(`/api/foods/${id}`);
 }

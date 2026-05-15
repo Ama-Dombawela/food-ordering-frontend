@@ -1,31 +1,26 @@
 import axiosInstance from "../api/axiosInstance";
-import type { Category } from "../types";
+import type { CategoryDTO } from "../types";
 
-// Returns every category used to organize food items.
-export async function getAllCategories(): Promise<Category[]> {
-  const response = await axiosInstance.get("/api/v1/categories");
-  return response.data as Category[];
+export async function getAllCategories(): Promise<CategoryDTO[]> {
+  const response = await axiosInstance.get<{ message: string; data: CategoryDTO[] }>("/api/categories");
+  return response.data.data;
 }
 
-// Looks up a single category by id.
-export async function getCategoryById(id: number): Promise<Category> {
-  const response = await axiosInstance.get(`/api/v1/categories/${id}`);
-  return response.data as Category;
+export async function getCategoryById(id: number): Promise<CategoryDTO> {
+  const response = await axiosInstance.get<{ message: string; data: CategoryDTO }>(`/api/categories/${id}`);
+  return response.data.data;
 }
 
-// Admin-only create endpoint.
-export async function createCategory(data: Partial<Category>): Promise<Category> {
-  const response = await axiosInstance.post("/api/v1/categories", data);
-  return response.data as Category;
+export async function createCategory(name: string): Promise<CategoryDTO> {
+  const response = await axiosInstance.post<{ name: string }, { data: { data: CategoryDTO } }>("/api/categories", { name });
+  return response.data.data;
 }
 
-// Admin-only update endpoint.
-export async function updateCategory(id: number, data: Partial<Category>): Promise<Category> {
-  const response = await axiosInstance.put(`/api/v1/categories/${id}`, data);
-  return response.data as Category;
+export async function updateCategory(id: number, name: string): Promise<CategoryDTO> {
+  const response = await axiosInstance.put<{ name: string }, { data: { data: CategoryDTO } }>(`/api/categories/${id}`, { name });
+  return response.data.data;
 }
 
-// Admin-only delete endpoint.
 export async function deleteCategory(id: number): Promise<void> {
-  await axiosInstance.delete(`/api/v1/categories/${id}`);
+  await axiosInstance.delete(`/api/categories/${id}`);
 }

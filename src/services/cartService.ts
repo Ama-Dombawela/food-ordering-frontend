@@ -1,30 +1,23 @@
 import axiosInstance from "../api/axiosInstance";
-import type { Cart } from "../types";
+import type { CartDTO } from "../types";
 
-// Gets the authenticated user's current cart.
-export async function getCart(): Promise<Cart> {
-  const response = await axiosInstance.get("/api/v1/cart");
-  return response.data as Cart;
+export async function getCart(userId: number): Promise<CartDTO> {
+  const response = await axiosInstance.get<{ message: string; data: CartDTO }>(`/api/cart/${userId}`);
+  return response.data.data;
 }
 
-// Adds a food item to the cart with the chosen quantity.
-export async function addToCart(foodItemId: number, quantity: number): Promise<Cart> {
-  const response = await axiosInstance.post("/api/v1/cart/items", { foodItemId, quantity });
-  return response.data as Cart;
+export async function addToCart(userId: number, foodItemId: number, quantity: number): Promise<CartDTO> {
+  const response = await axiosInstance.post<{ foodItemId: number; quantity: number }, { data: { data: CartDTO } }>(
+    `/api/cart/${userId}/items`,
+    { foodItemId, quantity },
+  );
+  return response.data.data;
 }
 
-// Updates the quantity for an existing cart item.
-export async function updateCartItem(cartItemId: number, quantity: number): Promise<Cart> {
-  const response = await axiosInstance.put(`/api/v1/cart/items/${cartItemId}`, { quantity });
-  return response.data as Cart;
+export async function removeCartItem(userId: number, itemId: number): Promise<void> {
+  await axiosInstance.delete(`/api/cart/${userId}/items/${itemId}`);
 }
 
-// Removes one cart item.
-export async function removeCartItem(cartItemId: number): Promise<void> {
-  await axiosInstance.delete(`/api/v1/cart/items/${cartItemId}`);
-}
-
-// Clears the cart completely.
-export async function clearCart(): Promise<void> {
-  await axiosInstance.delete("/api/v1/cart");
+export async function clearCart(userId: number): Promise<void> {
+  await axiosInstance.delete(`/api/cart/${userId}`);
 }

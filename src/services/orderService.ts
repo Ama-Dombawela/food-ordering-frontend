@@ -1,32 +1,26 @@
 import axiosInstance from "../api/axiosInstance";
-import type { Order } from "../types";
+import type { OrderDTO, OrderStatus } from "../types";
 
-// Places the current cart as a new order.
-export async function placeOrder(): Promise<Order> {
-  const response = await axiosInstance.post("/api/v1/orders");
-  return response.data as Order;
+export async function placeOrder(userId: number): Promise<null> {
+  const response = await axiosInstance.post<{ message: string; data: null }>(`/api/orders/${userId}`);
+  return response.data.data;
 }
 
-// Retrieves the signed-in user's order history.
-export async function getUserOrders(): Promise<Order[]> {
-  const response = await axiosInstance.get("/api/v1/orders");
-  return response.data as Order[];
+export async function getOrderById(id: number): Promise<OrderDTO> {
+  const response = await axiosInstance.get<{ message: string; data: OrderDTO }>(`/api/orders/${id}`);
+  return response.data.data;
 }
 
-// Loads a single order by id.
-export async function getOrderById(id: number): Promise<Order> {
-  const response = await axiosInstance.get(`/api/v1/orders/${id}`);
-  return response.data as Order;
+export async function getOrdersByUser(userId: number): Promise<OrderDTO[]> {
+  const response = await axiosInstance.get<{ message: string; data: OrderDTO[] }>(`/api/orders/user/${userId}`);
+  return response.data.data;
 }
 
-// Admin-only endpoint to fetch every order in the system.
-export async function getAllOrders(): Promise<Order[]> {
-  const response = await axiosInstance.get("/api/v1/orders/all");
-  return response.data as Order[];
+export async function updateOrderStatus(id: number, status: OrderStatus): Promise<OrderDTO> {
+  const response = await axiosInstance.put<{ status: OrderStatus }, { data: { data: OrderDTO } }>(`/api/orders/${id}/status`, { status });
+  return response.data.data;
 }
 
-// Admin-only status update for order processing.
-export async function updateOrderStatus(id: number, status: string): Promise<Order> {
-  const response = await axiosInstance.put(`/api/v1/orders/${id}/status`, { status });
-  return response.data as Order;
+export async function cancelOrder(id: number): Promise<void> {
+  await axiosInstance.delete(`/api/orders/${id}`);
 }

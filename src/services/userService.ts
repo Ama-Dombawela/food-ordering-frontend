@@ -1,20 +1,21 @@
 import axiosInstance from "../api/axiosInstance";
-import type { User } from "../types";
+import type { UserDTO } from "../types";
 
-// Loads the signed-in user's profile.
-export async function getUserProfile(): Promise<User> {
-  const response = await axiosInstance.get("/api/v1/users/profile");
-  return response.data as User;
+export async function getAllUsers(): Promise<UserDTO[]> {
+  const response = await axiosInstance.get<{ message: string; data: UserDTO[] }>("/api/users");
+  return response.data.data;
 }
 
-// Updates editable profile fields for the current user.
-export async function updateUserProfile(data: Partial<User>): Promise<User> {
-  const response = await axiosInstance.put("/api/v1/users/profile", data);
-  return response.data as User;
+export async function getUserById(id: number): Promise<UserDTO> {
+  const response = await axiosInstance.get<{ message: string; data: UserDTO }>(`/api/users/${id}`);
+  return response.data.data;
 }
 
-// Admin-only user listing.
-export async function getAllUsers(): Promise<User[]> {
-  const response = await axiosInstance.get("/api/v1/users");
-  return response.data as User[];
+export async function updateUser(id: number, data: Partial<UserDTO>): Promise<UserDTO> {
+  const response = await axiosInstance.put<Partial<UserDTO>, { data: { data: UserDTO } }>(`/api/users/${id}`, data);
+  return response.data.data;
+}
+
+export async function deleteUser(id: number): Promise<void> {
+  await axiosInstance.delete(`/api/users/${id}`);
 }
