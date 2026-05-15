@@ -1,37 +1,51 @@
-import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import ProtectedRoute from "./routes/ProtectedRoute";
-import AdminRoute from "./routes/AdminRoute";
+import ProtectedRoute from "./components/routes/ProtectedRoute";
+import AdminRoute from "./components/routes/AdminRoute";
+import Landing from "./pages/Landing";
+import SignIn from "./pages/auth/SignIn";
+import SignUp from "./pages/auth/SignUp";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
+import FoodList from "./pages/food/FoodList";
+import FoodDetail from "./pages/food/FoodDetail";
+import Cart from "./pages/cart/Cart";
+import OrderHistory from "./pages/orders/OrderHistory";
+import OrderDetail from "./pages/orders/OrderDetail";
+import Payment from "./pages/payment/Payment";
+import UserProfile from "./pages/user/UserProfile";
+import AdminFoodList from "./pages/admin/foods/AdminFoodList";
+import AdminCategoryList from "./pages/admin/categories/AdminCategoryList";
+import AdminOrderList from "./pages/admin/orders/AdminOrderList";
+import AdminUserList from "./pages/admin/users/AdminUserList";
 
-// Main application routing. Public routes are accessible to anyone;
-// protected routes require authentication; admin routes require admin role.
-export default function App(): JSX.Element {
+export default function App() {
   return (
     <Routes>
-      {/* Public routes */}
-      <Route path="/signin" element={<div>Sign In Page</div>} />
-      <Route path="/signup" element={<div>Sign Up Page</div>} />
+      <Route path="/" element={<Landing />} />
+      <Route path="/signin" element={<SignIn />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
-      {/* Protected routes: user must be authenticated to access these. */}
-      <Route element={<ProtectedRoute />}> 
-        <Route path="/home" element={<div>Home / Food List</div>} />
-        <Route path="/cart" element={<div>Cart</div>} />
-        <Route path="/orders" element={<div>Orders</div>} />
-        <Route path="/orders/:id" element={<div>Order Details</div>} />
-        <Route path="/payment/:orderId" element={<div>Payment</div>} />
-        <Route path="/profile" element={<div>Profile</div>} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/home" element={<FoodList />} />
+        <Route path="/foods" element={<FoodList />} />
+        <Route path="/food/:id" element={<FoodDetail />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/orders" element={<OrderHistory />} />
+        <Route path="/orders/:id" element={<OrderDetail />} />
+        <Route path="/payment/:orderId" element={<Payment />} />
+        <Route path="/profile" element={<UserProfile />} />
       </Route>
 
-      {/* Admin routes: require authenticated admin user. */}
-      <Route element={<AdminRoute />}> 
-        <Route path="/admin/foods" element={<div>Admin - Foods</div>} />
-        <Route path="/admin/categories" element={<div>Admin - Categories</div>} />
-        <Route path="/admin/orders" element={<div>Admin - Orders</div>} />
-        <Route path="/admin/users" element={<div>Admin - Users</div>} />
+      <Route element={<AdminRoute />}>
+        <Route path="/admin/foods" element={<AdminFoodList />} />
+        <Route path="/admin/categories" element={<AdminCategoryList />} />
+        <Route path="/admin/orders" element={<AdminOrderList />} />
+        <Route path="/admin/users" element={<AdminUserList />} />
       </Route>
 
-      {/* Catch-all: redirect unknown routes to sign-in. */}
-      <Route path="*" element={<Navigate to="/signin" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

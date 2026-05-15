@@ -1,3 +1,34 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+	:root {
+		color-scheme: dark;
+	}
+
+	html,
+	body,
+	#root {
+		min-height: 100%;
+	}
+
+	body {
+		margin: 0;
+		background:
+			radial-gradient(circle at 15% 20%, rgba(20, 184, 166, 0.16), transparent 40%),
+			radial-gradient(circle at 85% 0%, rgba(45, 212, 191, 0.12), transparent 32%),
+			linear-gradient(180deg, #052f2f 0%, #032927 45%, #021f1f 100%);
+		color: #ecfeff;
+	}
+
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: #4c1d95 #1a1333;
+	}
+
+	::selection {
+		background: rgba(20, 184, 166, 0.28);
+		color: #022b27;
+	}
+}
