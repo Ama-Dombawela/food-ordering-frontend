@@ -1,28 +1,31 @@
 import axiosInstance from "../api/axiosInstance";
-import type { User } from "../types";
+import type { AuthUser, Role } from "../types";
 
-// Login payload sent to the backend auth endpoint.
-export interface LoginRequest {
-  email: string;
-  password: string;
+export async function loginUser(email: string, password: string): Promise<AuthUser> {
+  const response = await axiosInstance.post<{ email: string; password: string }, { data: { data: AuthUser } }>("/api/auth/login", {
+    email,
+    password,
+  });
+
+  const user = response.data.data;
+  localStorage.setItem("userId", String(user.userId));
+  localStorage.setItem("token", user.token);
+  return user;
 }
 
-// Registration payload used by the sign-up flow.
-export interface RegisterRequest {
-  name: string;
-  email: string;
-  password: string;
-  role: "CUSTOMER" | "ADMIN";
-}
+export async function registerUser(name: string, email: string, password: string, role: Role): Promise<AuthUser> {
+  const response = await axiosInstance.post<{ name: string; email: string; password: string; role: Role }, { data: { data: AuthUser } }>(
+    "/api/auth/register",
+    {
+      name,
+      email,
+      password,
+      role,
+    },
+  );
 
-// Authenticates a user and returns the server-issued token plus user data.
-export async function loginUser(data: LoginRequest) {
-  const response = await axiosInstance.post("/api/v1/auth/login", data);
-  return response.data as { token: string; user: User };
-}
-
-// Creates a new account on the backend.
-export async function registerUser(data: RegisterRequest) {
-  const response = await axiosInstance.post("/api/v1/auth/register", data);
-  return response.data as User;
+  const user = response.data.data;
+  localStorage.setItem("userId", String(user.userId));
+  localStorage.setItem("token", user.token);
+  return user;
 }
