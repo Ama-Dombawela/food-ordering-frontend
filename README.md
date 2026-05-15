@@ -1,9 +1,6 @@
 # Food Ordering Frontend
 
-## Project Overview
-
-Food Ordering Frontend is a Vite + React + TypeScript application for an online food ordering platform. It includes customer-facing browsing and checkout flows, authentication pages, and admin dashboards for managing foods, categories, orders, and users.
-
+A Vite + React + TypeScript frontend for a full-featured online food ordering platform. It communicates with the Food Ordering Backend REST API and handles all client-side logic including JWT-based authentication, role-based route protection, and a complete customer flow covering food browsing, cart management, order placement, and order history. Admin users get access to dedicated dashboards for managing foods, categories, orders, and users
 
 ## Tech Stack
 
