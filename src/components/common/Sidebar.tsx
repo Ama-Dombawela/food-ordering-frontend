@@ -14,7 +14,7 @@ export default function Sidebar({ links }: SidebarProps) {
             key={link.to}
             to={link.to}
             className={({ isActive }) =>
-              `rounded-2xl px-4 py-3 text-sm font-medium transition ${isActive ? "bg-teal-500 text-teal-50" : "text-teal-200 hover:bg-teal-900/70 hover:text-white"}`
+              `rounded-2xl px-4 py-3 text-sm font-medium transition ${isActive ? "bg-teal-500 text-teal-50" : "text-teal-300 hover:bg-teal-900/70 hover:text-teal-50"}`
             }
           >
             {link.label}

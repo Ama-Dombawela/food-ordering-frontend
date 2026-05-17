@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useCart } from "../../hooks/useCart";
+import { ShoppingCart, UserCircle } from "lucide-react";
 
 const linkBase = "rounded-full px-4 py-2 text-sm font-medium transition";
 
@@ -21,7 +22,7 @@ export default function Navbar() {
         { to: "/admin/users", label: "Users" },
       ]
     : [
-        { to: "/home", label: "Home" },
+        { to: "/menu", label: "Menu" },
         { to: "/cart", label: `Cart${totalItems > 0 ? ` (${totalItems})` : ""}` },
         { to: "/orders", label: "Orders" },
       ];
@@ -57,11 +58,10 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-teal-900/70 bg-teal-950/85 text-teal-100 shadow-lg shadow-teal-950/35 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-teal-900/70 bg-black/70 text-teal-100 shadow-lg shadow-teal-950/35 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <div>
           <p className="text-xs uppercase tracking-[0.35em] text-teal-300">Online Food Ordering</p>
-          <h1 className="text-xl font-semibold text-white">Fresh, fast, and fully managed</h1>
         </div>
 
         <button type="button" className="rounded-full border border-teal-700 px-4 py-2 text-sm text-teal-200 lg:hidden" onClick={() => setMobileOpen((current) => !current)}>
@@ -78,7 +78,14 @@ export default function Navbar() {
                   `${linkBase} ${isActive ? "bg-teal-500 text-teal-50" : "text-teal-200 hover:bg-teal-900 hover:text-white"}`
                 }
               >
-                {link.label}
+                {link.to === "/cart" ? (
+                  <span className="inline-flex items-center">
+                    <ShoppingCart className="h-4 w-4 text-teal-200" />
+                    <span className="ml-2">{link.label}</span>
+                  </span>
+                ) : (
+                  link.label
+                )}
               </NavLink>
             ))}
           </nav>
@@ -90,17 +97,12 @@ export default function Navbar() {
               onClick={() => setProfileOpen((current) => !current)}
               className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-teal-700 bg-teal-900/70 text-teal-100 transition hover:border-teal-400 hover:bg-teal-800"
             >
-              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8">
-                <circle cx="12" cy="8" r="3.5" />
-                <path d="M4 20c1.7-3.7 4.4-5.5 8-5.5s6.3 1.8 8 5.5" strokeLinecap="round" />
-              </svg>
+              <UserCircle className="h-11 w-11" />
             </button>
 
             {profileOpen ? (
               <div className="absolute right-0 top-14 z-50 w-72 rounded-2xl border border-teal-800 bg-teal-950/95 p-4 shadow-xl shadow-teal-950/50 backdrop-blur">
-                <p className="text-xs uppercase tracking-[0.25em] text-teal-300">Signed in as</p>
-                <p className="mt-2 text-sm font-semibold text-white">{authUser?.email ?? "Unknown"}</p>
-                <p className="mt-1 text-xs text-teal-300">Role: {authUser?.role ?? "CUSTOMER"}</p>
+              
 
                 <div className="mt-4 grid gap-2">
                   <button
@@ -116,7 +118,7 @@ export default function Navbar() {
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="rounded-xl border border-rose-500/50 px-4 py-2 text-sm font-semibold text-rose-200 transition hover:bg-rose-500/15"
+                    className="rounded-xl border border-rose-400/40 px-4 py-2 text-sm font-semibold text-rose-100 hover:bg-rose-500/20 hover:text-rose-50 transition"
                   >
                     Logout
                   </button>
