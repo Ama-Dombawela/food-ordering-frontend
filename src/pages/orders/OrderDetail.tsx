@@ -75,8 +75,8 @@ export default function OrderDetail() {
         {error ? <p className="mb-6 rounded-3xl border border-rose-500/30 bg-rose-500/10 p-4 text-rose-200">{error}</p> : null}
 
         {!loading && !error && order && payment ? (
-          {/* Present summary cards first, followed by the item table. */}
           <div className="space-y-6">
+            {/* Present summary cards first, followed by the item table. */}
             <section className="grid gap-4 md:grid-cols-2">
               <div className="rounded-3xl border border-teal-800 bg-teal-950/70 p-6">
                 <p className="text-sm uppercase tracking-[0.3em] text-teal-300">Order</p>
