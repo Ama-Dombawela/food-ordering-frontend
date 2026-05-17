@@ -1,11 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import Navbar from "../../components/common/Navbar";
+import ConfirmModal from "../../components/common/ConfirmModal";
 import { useAuth } from "../../context/AuthContext";
 import { addToCart, clearCart, getCart, removeCartItem } from "../../services/cartService";
 import { getFoodById } from "../../services/foodService";
 import { getOrdersByUser, placeOrder } from "../../services/orderService";
 import type { CartItemDTO, FoodItemDTO } from "../../types";
+import { ShoppingCart } from "lucide-react";
+
 
 interface EnrichedCartItem {
   cartItem: CartItemDTO;
@@ -19,6 +23,7 @@ export default function Cart() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [busyItemId, setBusyItemId] = useState<number | null>(null);
+  const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
 
   const total = useMemo(
     () => items.reduce((sum, entry) => sum + entry.food.price * entry.cartItem.quantity, 0),
@@ -82,12 +87,19 @@ export default function Cart() {
   };
 
   const handleClearCart = async () => {
-    if (!userId || !window.confirm("Clear your cart?")) {
+    if (!userId) {
       return;
     }
 
-    await clearCart(userId);
-    await loadCart();
+    try {
+      await clearCart(userId);
+      toast.success("Cart cleared.");
+      await loadCart();
+    } catch {
+      toast.error("Unable to clear cart.");
+    } finally {
+      setClearConfirmOpen(false);
+    }
   };
 
   const handlePlaceOrder = async () => {
@@ -106,17 +118,17 @@ export default function Cart() {
   return (
     <div className="min-h-screen bg-transparent text-teal-100">
       <Navbar />
-      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="flex-1 mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8 flex items-center justify-between gap-4">
           <div>
             <p className="text-sm uppercase tracking-[0.3em] text-teal-300">Cart</p>
-            <h2 className="mt-2 text-4xl font-semibold text-white">Your cart</h2>
+            <h2 className="mt-2 flex items-center gap-2 text-4xl font-semibold text-white"><ShoppingCart className="h-10 w-10" /> Your cart</h2>
           </div>
           {items.length > 0 ? (
             <button
               type="button"
-              onClick={() => void handleClearCart()}
-              className="rounded-full border border-rose-500/40 px-5 py-3 text-sm font-semibold text-rose-200 transition hover:bg-rose-500/10"
+              onClick={() => setClearConfirmOpen(true)}
+              className="rounded-xl border border-rose-400/40 px-4 py-2 text-sm font-semibold text-rose-100 hover:bg-rose-500/12 hover:text-rose-50 transition"
             >
               Clear Cart
             </button>
@@ -128,17 +140,20 @@ export default function Cart() {
 
         {!loading && !error ? (
           items.length === 0 ? (
-            <div className="rounded-3xl border border-teal-800 bg-teal-950/70 p-10 text-center text-teal-200">
+            <div className="rounded-3xl border border-teal-800 bg-black/50 p-10 text-center text-teal-200">
               <p>Your cart is empty.</p>
+              <div className="mt-2 flex justify-center">
+                <ShoppingCart className="h-16 w-16 text-teal-400" />
+              </div>
               <Link className="mt-4 inline-flex rounded-full bg-teal-500 px-5 py-3 text-sm font-semibold text-teal-50" to="/foods">
-                Browse foods
+                Add foods
               </Link>
             </div>
           ) : (
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
               <div className="space-y-4">
                 {items.map(({ cartItem, food }) => (
-                  <article key={cartItem.id} className="rounded-3xl border border-teal-800 bg-teal-950/70 p-5">
+                  <article key={cartItem.id} className="rounded-3xl border border-teal-800 bg-black/50 p-5">
                     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                       <div>
                         <h3 className="text-lg font-semibold text-white">{food.name}</h3>
@@ -167,7 +182,7 @@ export default function Cart() {
                               setBusyItemId(null);
                             }
                           }}
-                          className="rounded-full border border-rose-500/40 px-4 py-2 text-sm font-medium text-rose-200"
+                          className="rounded-xl border border-rose-400/40 px-4 py-2 text-sm font-medium text-rose-100 hover:bg-rose-500/12 hover:text-rose-50 transition"
                           disabled={busyItemId === cartItem.id}
                         >
                           Remove
@@ -179,7 +194,7 @@ export default function Cart() {
                 ))}
               </div>
 
-              <aside className="h-fit rounded-3xl border border-teal-800 bg-teal-950/70 p-6">
+              <aside className="h-fit rounded-3xl border border-teal-800 bg-black/50 p-6">
                 <p className="text-sm uppercase tracking-[0.3em] text-teal-300">Summary</p>
                 <div className="mt-6 space-y-3 text-sm text-teal-200/80">
                   <div className="flex justify-between">
@@ -203,6 +218,15 @@ export default function Cart() {
           )
         ) : null}
       </main>
+      <ConfirmModal
+        open={clearConfirmOpen}
+        title="Clear Cart"
+        message="Clear all items from your cart? This action cannot be undone."
+        confirmText="Clear"
+        loading={false}
+        onConfirm={() => void handleClearCart()}
+        onCancel={() => setClearConfirmOpen(false)}
+      />
     </div>
   );
 }

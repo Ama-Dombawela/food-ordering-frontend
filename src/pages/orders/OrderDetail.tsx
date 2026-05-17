@@ -5,6 +5,7 @@ import { getOrderById } from "../../services/orderService";
 import { getPaymentByOrderId } from "../../services/paymentService";
 import { getFoodById } from "../../services/foodService";
 import type { FoodItemDTO, OrderDTO, OrderItemDTO, PaymentDTO, OrderStatus } from "../../types";
+import { formatStatus } from "../../utils";
 
 interface DetailedOrderItem extends OrderItemDTO {
   food: FoodItemDTO;
@@ -60,10 +61,10 @@ export default function OrderDetail() {
   }, [orderId]);
 
   return (
-    <div className="min-h-screen bg-transparent text-teal-100">
+    <div className="flex flex-col min-h-screen bg-transparent text-teal-100">
       <Navbar />
-      <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8">
+      <main className="flex-1 mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mb-8 flex items-center justify-between gap-4">
           <p className="text-sm uppercase tracking-[0.3em] text-teal-300">Order details</p>
           <h2 className="mt-2 text-4xl font-semibold text-white">Order #{params.id}</h2>
         </div>
@@ -83,7 +84,7 @@ export default function OrderDetail() {
                   <p>
                     <span className="text-teal-200/60">Status:</span>{" "}
                     <span className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.25em] ring-1 ${statusClasses[order.status]}`}>
-                      {order.status}
+                      {formatStatus(order.status)}
                     </span>
                   </p>
                   <p>
@@ -98,7 +99,7 @@ export default function OrderDetail() {
                     <span className="text-teal-200/60">Amount:</span> ${payment.amount.toFixed(2)}
                   </p>
                   <p>
-                    <span className="text-teal-200/60">Status:</span> {payment.status}
+                    <span className="text-teal-200/60">Status:</span> {formatStatus(payment.status)}
                   </p>
                   <p>
                     <span className="text-teal-200/60">Date:</span> {new Date(payment.paymentDate).toLocaleString()}

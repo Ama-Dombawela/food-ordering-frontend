@@ -1,6 +1,6 @@
 import { Button, Card, Badge } from "../ui";
 import type { OrderDTO } from "../../types";
-import { formatCurrency, formatDate } from "../../utils";
+import { formatCurrency, formatDate, formatStatus } from "../../utils";
 
 interface PaymentSummaryProps {
   order: OrderDTO;
@@ -18,7 +18,7 @@ export default function PaymentSummary({ order, onPayNow, loading = false }: Pay
           <h3 className="text-xl font-semibold text-white">{formatDate(order.orderDate)}</h3>
         </div>
         <Badge variant={order.status === "DELIVERED" ? "green" : order.status === "PREPARING" ? "yellow" : order.status === "PLACED" ? "blue" : "red"}>
-          {order.status}
+          {formatStatus(order.status)}
         </Badge>
       </div>
       <div className="rounded-2xl border border-teal-800 bg-teal-950/70 p-4">

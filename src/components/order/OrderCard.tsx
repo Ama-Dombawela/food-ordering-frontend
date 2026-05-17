@@ -1,6 +1,6 @@
 import { Button, Badge, Card } from "../ui";
 import type { OrderDTO } from "../../types";
-import { formatCurrency, formatDate } from "../../utils";
+import { formatCurrency, formatDate, formatStatus } from "../../utils";
 
 interface OrderCardProps {
   order: OrderDTO;
@@ -19,7 +19,7 @@ export default function OrderCard({ order, onViewDetails }: OrderCardProps) {
         <h3 className="text-xl font-semibold text-white">{formatDate(order.orderDate)}</h3>
         <p className="mt-1 text-sm text-teal-200/70">{formatCurrency(order.totalAmount)}</p>
       </div>
-      <Badge variant={badgeVariant}>{order.status}</Badge>
+      <Badge variant={badgeVariant}>{formatStatus(order.status)}</Badge>
       <Button type="button" onClick={() => onViewDetails(order.id)}>
         View Details
       </Button>

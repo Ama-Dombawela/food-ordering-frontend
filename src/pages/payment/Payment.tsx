@@ -60,9 +60,9 @@ export default function Payment() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent text-teal-100">
+    <div className="flex flex-col min-h-screen bg-transparent text-teal-100">
       <Navbar />
-      <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="flex-1 mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <p className="text-sm uppercase tracking-[0.35em] text-teal-300">Payment</p>
           <h1 className="mt-2 text-4xl font-semibold text-white">Complete payment</h1>

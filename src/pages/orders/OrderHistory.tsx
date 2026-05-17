@@ -12,12 +12,14 @@ export default function OrderHistory() {
   const { orders, loading, error } = useOrders();
 
   return (
-    <div className="min-h-screen bg-transparent text-teal-100">
+    <div className="flex flex-col min-h-screen bg-transparent text-teal-100">
       <Navbar />
-      <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <p className="text-sm uppercase tracking-[0.35em] text-teal-300">Orders</p>
-          <h1 className="mt-2 text-4xl font-semibold text-white">Order history</h1>
+      <main className="flex-1 mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mb-8 flex items-center justify-between gap-4">
+          <div>
+            <p className="text-sm uppercase tracking-[0.3em] text-teal-300">Orders</p>
+            <h2 className="mt-2 text-4xl font-semibold text-white">Order history</h2>
+          </div>
         </div>
         {loading ? <Spinner /> : null}
         {error ? <p className="rounded-3xl border border-rose-500/30 bg-rose-500/10 p-4 text-rose-200">{error}</p> : null}
