@@ -1,6 +1,6 @@
 import { Badge, Card } from "../ui";
 import type { OrderDTO } from "../../types";
-import { formatCurrency, formatDate } from "../../utils";
+import { formatCurrency, formatDate, formatStatus } from "../../utils";
 
 interface AdminOrderCardProps {
   order: OrderDTO;
@@ -18,7 +18,7 @@ export default function AdminOrderCard({ order, onChangeStatus }: AdminOrderCard
       </div>
       <div className="flex flex-wrap items-center gap-3">
         <span className="text-teal-300">{formatCurrency(order.totalAmount)}</span>
-        <Badge variant={order.status === "DELIVERED" ? "green" : order.status === "PREPARING" ? "yellow" : order.status === "PLACED" ? "blue" : "red"}>{order.status}</Badge>
+        <Badge variant={order.status === "DELIVERED" ? "green" : order.status === "PREPARING" ? "yellow" : order.status === "PLACED" ? "blue" : "red"}>{formatStatus(order.status)}</Badge>
         <select value={order.status} onChange={(event) => onChangeStatus(order.id, event.target.value as OrderDTO["status"])} className="rounded-2xl border border-teal-700 bg-teal-950/70 px-4 py-3 text-sm text-teal-50 outline-none">
           <option value="PLACED">PLACED</option>
           <option value="PREPARING">PREPARING</option>
