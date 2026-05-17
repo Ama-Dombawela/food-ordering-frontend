@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getAllFoods, getFoodsByCategory } from "../services/foodService";
 import type { FoodItemDTO } from "../types";
 
@@ -6,42 +6,60 @@ import type { FoodItemDTO } from "../types";
 export function useFoods() {
   const [foods, setFoods] = useState<FoodItemDTO[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filtering, setFiltering] = useState(false);
   const [error, setError] = useState("");
   const [activeCategoryId, setActiveCategoryId] = useState<number | null>(null);
+  const requestIdRef = useRef(0);
 
-  useEffect(() => {
-    const load = async () => {
+  const loadFoods = useCallback(async (categoryId: number | null, showFullLoading: boolean) => {
+    const requestId = ++requestIdRef.current;
+
+    if (showFullLoading) {
       setLoading(true);
-      setError("");
+    } else {
+      setFiltering(true);
+    }
 
-      try {
-        setFoods(await getAllFoods());
-      } catch {
-        setError("Unable to load foods.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    void load();
-  }, []);
-
-  const filterByCategory = async (categoryId: number | null) => {
-    setActiveCategoryId(categoryId);
-    setLoading(true);
     setError("");
 
     try {
-      setFoods(categoryId === null ? await getAllFoods() : await getFoodsByCategory(categoryId));
+      const nextFoods = categoryId === null ? await getAllFoods() : await getFoodsByCategory(categoryId);
+
+      if (requestId === requestIdRef.current) {
+        setFoods(nextFoods);
+        setActiveCategoryId(categoryId);
+      }
     } catch {
-      setError("Unable to filter foods.");
+      if (requestId === requestIdRef.current) {
+        setError(categoryId === null ? "Unable to load foods." : "Unable to filter foods.");
+      }
     } finally {
-      setLoading(false);
+      if (requestId === requestIdRef.current) {
+        if (showFullLoading) {
+          setLoading(false);
+        } else {
+          setFiltering(false);
+        }
+      }
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      void loadFoods(null, true);
+    }, 0);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [loadFoods]);
+
+  const filterByCategory = useCallback(async (categoryId: number | null) => {
+    await loadFoods(categoryId, false);
+  }, [loadFoods]);
 
   return useMemo(
-    () => ({ foods, loading, error, activeCategoryId, filterByCategory }),
-    [foods, loading, error, activeCategoryId],
+    () => ({ foods, loading, filtering, error, activeCategoryId, filterByCategory }),
+    [foods, loading, filtering, error, activeCategoryId, filterByCategory],
   );
 }

@@ -43,7 +43,13 @@ export function useCart() {
   }, [userId]);
 
   useEffect(() => {
-    void loadCart();
+    const timer = setTimeout(() => {
+      void loadCart();
+    }, 0);
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, [loadCart]);
 
   const addItem = useCallback(

@@ -73,30 +73,36 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedAuthUser = readStoredAuthUser();
-    const storedUserIdValue = localStorage.getItem("userId");
+    const timer = setTimeout(() => {
+      const storedToken = localStorage.getItem("token");
+      const storedAuthUser = readStoredAuthUser();
+      const storedUserIdValue = localStorage.getItem("userId");
 
-    if (storedToken && storedAuthUser) {
-      setToken(storedToken);
-      setAuthUser(storedAuthUser);
+      if (storedToken && storedAuthUser) {
+        setToken(storedToken);
+        setAuthUser(storedAuthUser);
 
-      if (storedUserIdValue) {
-        const parsedUserId = Number(storedUserIdValue);
+        if (storedUserIdValue) {
+          const parsedUserId = Number(storedUserIdValue);
 
-        if (Number.isFinite(parsedUserId)) {
-          setUserId(parsedUserId);
-          return;
+          if (Number.isFinite(parsedUserId)) {
+            setUserId(parsedUserId);
+            return;
+          }
+        }
+
+        const derivedUserId = extractUserId(storedToken);
+        setUserId(derivedUserId);
+
+        if (derivedUserId !== null) {
+          localStorage.setItem("userId", String(derivedUserId));
         }
       }
+    }, 0);
 
-      const derivedUserId = extractUserId(storedToken);
-      setUserId(derivedUserId);
-
-      if (derivedUserId !== null) {
-        localStorage.setItem("userId", String(derivedUserId));
-      }
-    }
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
 
   const login = (tokenValue: string, authUserValue: AuthUser) => {
@@ -140,6 +146,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
 
