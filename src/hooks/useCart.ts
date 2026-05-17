@@ -3,6 +3,7 @@ import { addToCart, clearCart, getCart, removeCartItem } from "../services/cartS
 import { getFoodById } from "../services/foodService";
 import type { CartItemDTO, FoodItemDTO } from "../types";
 
+// Enrich each cart item with full food details (price, name) for rendering.
 type CartRow = {
   cartItem: CartItemDTO;
   foodItem: FoodItemDTO;
@@ -28,6 +29,7 @@ export function useCart() {
 
     try {
       const cart = await getCart(userId);
+      // Resolve each cart item against the food service to get names and prices.
       const rows = await Promise.all(
         cart.cartItems.map(async (cartItem) => ({
           cartItem,
@@ -58,6 +60,7 @@ export function useCart() {
         return;
       }
 
+      // Add to cart then refresh the full cart state so UI stays in sync.
       await addToCart(userId, foodItemId, quantity);
       await loadCart();
     },

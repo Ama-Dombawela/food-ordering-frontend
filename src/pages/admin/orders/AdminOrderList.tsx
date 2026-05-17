@@ -14,12 +14,14 @@ export default function AdminOrderList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // Load every user's orders so the admin table presents a global view.
   const load = async () => {
     setLoading(true);
     setError("");
 
     try {
       const users = await getAllUsers();
+  // Handle status changes inline so administrators can update a row without leaving the page.
       const loadedOrders = await Promise.all(users.map((user: UserDTO) => getOrdersByUser(user.id)));
       setOrders(loadedOrders.flat().sort((left, right) => new Date(right.orderDate).getTime() - new Date(left.orderDate).getTime()));
     } catch {
@@ -56,6 +58,7 @@ export default function AdminOrderList() {
         {loading ? <Spinner /> : null}
         {error ? <p className="rounded-3xl border border-rose-400/20 bg-rose-400/10 p-4 text-rose-200">{error}</p> : null}
 
+        {/* The table layout keeps order status updates compact and easy to scan. */}
         {!loading && !error ? (
           <Card className="overflow-x-auto p-0">
             <table className="min-w-full text-left text-sm">

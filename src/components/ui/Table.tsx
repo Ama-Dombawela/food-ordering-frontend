@@ -6,6 +6,7 @@ interface TableProps {
   className?: string;
 }
 
+// Generic table renderer for dense admin and history data views.
 export const Table: React.FC<TableProps> = ({ headers, rows, className = '' }) => {
   return (
     <div className={`overflow-x-auto ${className}`}>

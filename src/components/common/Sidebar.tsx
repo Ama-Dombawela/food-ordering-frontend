@@ -4,10 +4,11 @@ interface SidebarProps {
   links: Array<{ to: string; label: string }>;
 }
 
-// Responsive sidebar shell for admin-oriented navigation.
+// Responsive sidebar shell for administrator-oriented navigation.
 export default function Sidebar({ links }: SidebarProps) {
   return (
     <aside className="w-full rounded-3xl border border-teal-900/70 bg-teal-950/60 p-4 backdrop-blur lg:w-72">
+      {/* Render the navigation set supplied by the page container. */}
       <nav className="grid gap-2">
         {links.map((link) => (
           <NavLink

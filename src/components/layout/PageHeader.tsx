@@ -7,6 +7,7 @@ interface PageHeaderProps {
   children?: React.ReactNode;
 }
 
+// Shared page header block for titles, subtitles, and page-level actions.
 export const PageHeader: React.FC<PageHeaderProps> = ({
   title,
   subtitle,

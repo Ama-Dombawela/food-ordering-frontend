@@ -10,6 +10,7 @@ export function useOrders() {
 
   useEffect(() => {
     const load = async () => {
+      // Read the user id from auth context cache.
       const userId = Number(localStorage.getItem("userId"));
 
       if (!Number.isFinite(userId)) {
@@ -22,6 +23,7 @@ export function useOrders() {
       setError("");
 
       try {
+        // Fetch the full order list for the authenticated user.
         setOrders(await getOrdersByUser(userId));
       } catch {
         setError("Unable to load orders.");

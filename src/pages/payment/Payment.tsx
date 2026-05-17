@@ -19,6 +19,7 @@ export default function Payment() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  // Load the target order before rendering payment controls.
   useEffect(() => {
     const load = async () => {
       if (!Number.isFinite(orderId)) {
@@ -39,6 +40,7 @@ export default function Payment() {
     void load();
   }, [orderId]);
 
+  // Payment is a single action, so the handler runs only after user confirmation.
   const handlePayNow = async () => {
     if (!order) {
       return;
@@ -72,6 +74,7 @@ export default function Payment() {
         {error ? <p className="rounded-3xl border border-rose-500/30 bg-rose-500/10 p-4 text-rose-200">{error}</p> : null}
         {message ? <p className="mb-4 rounded-3xl border border-teal-500/30 bg-teal-500/10 p-4 text-teal-200">{message}</p> : null}
 
+        {/* Keep the summary component separate from the page shell for reuse. */}
         {!loading && !error && order ? <PaymentSummary order={order} onPayNow={handlePayNow} loading={paying} /> : null}
       </main>
       <Footer />

@@ -14,12 +14,14 @@ export default function OrderCard({ order, onViewDetails }: OrderCardProps) {
 
   return (
     <Card className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      {/* Order metadata is grouped on the left for fast scanning. */}
       <div>
         <p className="text-sm text-teal-200/70">Order #{order.id}</p>
         <h3 className="text-xl font-semibold text-white">{formatDate(order.orderDate)}</h3>
         <p className="mt-1 text-sm text-teal-200/70">{formatCurrency(order.totalAmount)}</p>
       </div>
       <Badge variant={badgeVariant}>{formatStatus(order.status)}</Badge>
+      {/* The details action remains separate from the status indicator. */}
       <Button type="button" onClick={() => onViewDetails(order.id)}>
         View Details
       </Button>

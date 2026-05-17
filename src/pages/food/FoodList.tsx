@@ -20,12 +20,14 @@ export default function FoodList() {
   const { addItem } = useCart();
   const [addError, setAddError] = useState("");
 
+  // Redirect administrators to the management view rather than the customer menu.
   useEffect(() => {
     if (isAdmin) {
       navigate("/admin/foods", { replace: true });
     }
   }, [isAdmin, navigate]);
 
+  // Isolate cart updates so a failure does not interrupt browsing.
   const handleAddToCart = async (foodId: number) => {
     setAddError("");
 
@@ -51,11 +53,14 @@ export default function FoodList() {
           </button>
         </div>
 
+        {/* Place filters above the grid so category changes remain easy to discover. */}
         <Card className={`mb-6 space-y-4 transition-opacity duration-200 ${filtering ? "opacity-80" : "opacity-100"}`}>
           <FoodFilter categories={categories} activeCategoryId={activeCategoryId} loading={filtering} onChange={filterByCategory} />
+          {/* Present cart errors near the filters because the action originates from the cards below. */}
           {addError ? <p className="text-sm text-rose-300">{addError}</p> : null}
         </Card>
 
+        {/* Render loading, error, empty, and populated states separately for clarity. */}
         {loading ? <Spinner /> : null}
         {error ? <p className="rounded-3xl border border-rose-500/30 bg-rose-500/10 p-4 text-rose-200">{error}</p> : null}
 

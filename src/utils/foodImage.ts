@@ -76,6 +76,7 @@ function normalizeFoodName(name: string) {
   return name.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
+// Resolve a food name to its preview image, falling back to a default if not found.
 export function getFoodImage(name: string) {
   return foodImages[normalizeFoodName(name)] ?? defaultFoodImage;
 }

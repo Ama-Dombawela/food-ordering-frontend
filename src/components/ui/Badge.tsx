@@ -6,6 +6,7 @@ interface BadgeProps {
   className?: string;
 }
 
+// Compact status chip used to emphasize state across tables and cards.
 export function Badge({ variant = "neutral", children, className = "" }: BadgeProps) {
   const variantClasses = {
     green: "bg-emerald-500/15 text-emerald-300 ring-emerald-500/30",

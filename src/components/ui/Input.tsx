@@ -5,6 +5,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string;
 }
 
+// Text input primitive with optional label and validation message support.
 export function Input({ label, error, className = "", ...props }: InputProps) {
   return (
     <label className="block space-y-2">

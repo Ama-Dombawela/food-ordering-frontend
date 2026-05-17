@@ -1,6 +1,7 @@
 import Modal from "./Modal";
 import { Button } from "../ui";
 
+// Reusable confirmation dialog for destructive actions such as delete or terminate.
 interface ConfirmModalProps {
   open: boolean;
   title: string;

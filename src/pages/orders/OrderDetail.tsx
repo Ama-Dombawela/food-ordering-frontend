@@ -18,6 +18,7 @@ const statusClasses: Record<OrderStatus, string> = {
   CANCELLED: "bg-rose-500/15 text-rose-300 ring-rose-500/30",
 };
 
+// Order detail page that merges order, payment, and line-item data.
 export default function OrderDetail() {
   const params = useParams();
   const orderId = Number(params.id);
@@ -29,6 +30,7 @@ export default function OrderDetail() {
 
   const total = useMemo(() => order?.totalAmount ?? 0, [order]);
 
+  // Load the order, payment, and line-item data together to maintain consistency.
   useEffect(() => {
     const initialize = async () => {
       if (!Number.isFinite(orderId)) {
@@ -73,6 +75,7 @@ export default function OrderDetail() {
         {error ? <p className="mb-6 rounded-3xl border border-rose-500/30 bg-rose-500/10 p-4 text-rose-200">{error}</p> : null}
 
         {!loading && !error && order && payment ? (
+          {/* Present summary cards first, followed by the item table. */}
           <div className="space-y-6">
             <section className="grid gap-4 md:grid-cols-2">
               <div className="rounded-3xl border border-teal-800 bg-teal-950/70 p-6">
@@ -108,6 +111,7 @@ export default function OrderDetail() {
               </div>
             </section>
 
+            {/* Line items remain in a table because quantities and subtotals are easiest to review there. */}
             <section className="overflow-hidden rounded-3xl border border-teal-800 bg-teal-950/70">
               <table className="min-w-full divide-y divide-teal-800 text-left text-sm">
                 <thead className="bg-teal-950/80 text-teal-200">

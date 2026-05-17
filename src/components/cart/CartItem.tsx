@@ -18,11 +18,13 @@ export default function CartItem({ cartItem, foodItem, onIncrement, onDecrement,
         <h3 className="text-lg font-semibold text-white">{foodItem.name}</h3>
         <p className="text-sm text-teal-200/70">Unit price {formatCurrency(foodItem.price)}</p>
       </div>
+      {/* Quantity controls are kept adjacent so updates remain direct and clear. */}
       <div className="flex items-center gap-3">
         <Button type="button" variant="secondary" onClick={onDecrement}>-</Button>
         <span className="min-w-8 text-center text-lg font-semibold text-white">{cartItem.quantity}</span>
         <Button type="button" variant="secondary" onClick={onIncrement}>+</Button>
       </div>
+      {/* The total is derived from the unit price and the current quantity. */}
       <div className="text-right">
         <p className="text-sm text-teal-200/70">Total</p>
         <p className="text-lg font-semibold text-teal-300">{formatCurrency(foodItem.price * cartItem.quantity)}</p>

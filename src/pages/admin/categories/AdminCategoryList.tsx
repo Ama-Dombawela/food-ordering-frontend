@@ -19,12 +19,14 @@ export default function AdminCategoryList() {
   const [editingCategory, setEditingCategory] = useState<CategoryDTO | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<CategoryDTO | null>(null);
 
+  // Load categories on mount and after create, update, or delete operations.
   const load = async () => {
     setLoading(true);
     setError("");
 
     try {
       setCategories(await getAllCategories());
+  // Reuse the same form for creation and editing, based on the current selection.
     } catch {
       setError("Unable to load categories.");
     } finally {
@@ -93,6 +95,7 @@ export default function AdminCategoryList() {
         {loading ? <Spinner /> : null}
         {error ? <p className="rounded-3xl border border-rose-400/20 bg-rose-400/10 p-4 text-rose-200">{error}</p> : null}
 
+        {/* Keep table actions inline because category rows are short and straightforward. */}
         {!loading && !error ? (
           <Card className="overflow-x-auto p-0">
             <table className="min-w-full text-left text-sm">
@@ -119,6 +122,7 @@ export default function AdminCategoryList() {
           </Card>
         ) : null}
 
+        {/* The modal form reuses the same state for both add and edit workflows. */}
         <AdminCategoryForm open={open} category={editingCategory} loading={saving} onClose={() => setOpen(false)} onSubmit={handleSubmit} />
         <ConfirmModal
           open={deleteTarget !== null}

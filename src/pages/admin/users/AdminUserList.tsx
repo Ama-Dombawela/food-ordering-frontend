@@ -15,12 +15,14 @@ export default function AdminUserList() {
   const [error, setError] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<UserDTO | null>(null);
 
+  // Load the complete user list once so the administrator can manage accounts from one screen.
   const load = async () => {
     setLoading(true);
     setError("");
 
     try {
       setUsers(await getAllUsers());
+  // Deletion is the only row-level action on this page, so it remains isolated.
     } catch {
       setError("Unable to load users.");
     } finally {
@@ -66,6 +68,7 @@ export default function AdminUserList() {
         {loading ? <Spinner /> : null}
         {error ? <p className="rounded-3xl border border-rose-400/20 bg-rose-400/10 p-4 text-rose-200">{error}</p> : null}
 
+        {/* A compact table makes the account list easy to review and maintain. */}
         {!loading && !error ? (
           <Card className="overflow-x-auto p-0">
             <table className="min-w-full text-left text-sm">

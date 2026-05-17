@@ -24,6 +24,7 @@ export default function UserProfile() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  // Load the current user's profile once the user identifier is available.
   useEffect(() => {
     const load = async () => {
       if (!userId) {
@@ -47,6 +48,7 @@ export default function UserProfile() {
     void load();
   }, [userId]);
 
+  // Saving updates only the editable profile fields shown on the page.
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!user || !userId) {
@@ -68,6 +70,7 @@ export default function UserProfile() {
     }
   };
 
+  // Account termination is separated from saving so the destructive action remains explicit.
   const handleTerminate = async () => {
     if (!userId) {
       return;
@@ -103,6 +106,7 @@ export default function UserProfile() {
         {error ? <p className="rounded-3xl border border-rose-500/30 bg-rose-500/10 p-4 text-rose-200">{error}</p> : null}
         {message ? <p className="mb-4 rounded-3xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-emerald-200">{message}</p> : null}
 
+        {/* Group identity, editable fields, and destructive actions within a single card. */}
         {!loading && user ? (
           <Card className="space-y-8 border-teal-800 bg-black/50 p-12">
             <div className="flex items-start justify-between gap-6">

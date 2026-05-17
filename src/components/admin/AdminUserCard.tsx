@@ -10,6 +10,7 @@ interface AdminUserCardProps {
 export default function AdminUserCard({ user, onDelete }: AdminUserCardProps) {
   return (
     <Card className="flex items-center justify-between gap-4">
+      {/* Present the user identity first, then the role and action. */}
       <div>
         <h3 className="text-lg font-semibold text-white">{user.name}</h3>
         <p className="text-sm text-teal-200/70">{user.email}</p>

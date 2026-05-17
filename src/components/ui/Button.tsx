@@ -8,6 +8,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
 }
 
+// Shared button primitive with loading and variant styling built in.
 export function Button({
   variant = "primary",
   loading = false,

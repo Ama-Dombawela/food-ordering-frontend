@@ -16,6 +16,7 @@ interface EnrichedCartItem {
   food: FoodItemDTO;
 }
 
+// Cart page that resolves item details, updates quantities, and places orders.
 export default function Cart() {
   const navigate = useNavigate();
   const { userId } = useAuth();
@@ -30,6 +31,7 @@ export default function Cart() {
     [items],
   );
 
+  // Retrieve cart data and enrich each item with its associated food record before rendering.
   const loadCart = async () => {
     if (!userId) {
       setError("Unable to resolve your account id.");
@@ -48,6 +50,7 @@ export default function Cart() {
     setItems(resolvedItems);
   };
 
+  // Refresh the cart whenever the authenticated user changes.
   useEffect(() => {
     const initialize = async () => {
       setLoading(true);
@@ -66,6 +69,7 @@ export default function Cart() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
+  // Quantity adjustments are implemented by replacing the existing row.
   const updateQuantity = async (cartItem: CartItemDTO, nextQuantity: number) => {
     if (!userId) {
       return;
@@ -138,6 +142,7 @@ export default function Cart() {
         {loading ? <p className="rounded-3xl border border-teal-800 bg-teal-950/70 p-6 text-teal-200">Loading cart...</p> : null}
         {error ? <p className="mb-6 rounded-3xl border border-rose-500/30 bg-rose-500/10 p-4 text-rose-200">{error}</p> : null}
 
+        {/* Render the empty, list, and summary states separately for readability. */}
         {!loading && !error ? (
           items.length === 0 ? (
             <div className="rounded-3xl border border-teal-800 bg-black/50 p-10 text-center text-teal-200">

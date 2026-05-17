@@ -11,6 +11,7 @@ interface AdminCategoryCardProps {
 export default function AdminCategoryCard({ category, onEdit, onDelete }: AdminCategoryCardProps) {
   return (
     <Card className="flex items-center justify-between gap-4">
+      {/* Show the category name prominently before the available actions. */}
       <h3 className="text-lg font-semibold text-white">{category.name}</h3>
       <div className="flex gap-3">
         <Button type="button" variant="secondary" onClick={() => onEdit(category)}>Edit</Button>

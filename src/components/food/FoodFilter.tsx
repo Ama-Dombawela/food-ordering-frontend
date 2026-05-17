@@ -8,14 +8,16 @@ interface FoodFilterProps {
   onChange: (categoryId: number | null) => void;
 }
 
-// Filter buttons for narrowing the menu by category.
+// Filter controls for narrowing the menu by category.
 export default function FoodFilter({ categories, activeCategoryId, loading = false, onChange }: FoodFilterProps) {
   return (
     <div className="flex flex-wrap gap-3">
+      {/* The default state shows every category. */}
       <Button type="button" variant={activeCategoryId === null ? "primary" : "secondary"} disabled={loading} onClick={() => onChange(null)}>
         All
       </Button>
       {categories.map((category) => (
+        /* Each category button selects a single filtered view. */
         <Button
           key={category.id}
           type="button"

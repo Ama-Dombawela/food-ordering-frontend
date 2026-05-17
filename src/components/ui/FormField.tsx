@@ -8,6 +8,7 @@ interface FormFieldProps {
   helperText?: string;
 }
 
+// Form wrapper that keeps labels, helper text, and errors aligned.
 export const FormField: React.FC<FormFieldProps> = ({
   label,
   error,

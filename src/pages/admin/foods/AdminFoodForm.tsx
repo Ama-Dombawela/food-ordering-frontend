@@ -29,6 +29,7 @@ export default function AdminFoodForm({ open, categories, food, loading = false,
   const [status, setStatus] = useState<FoodItemStatus>("AVAILABLE");
   const [error, setError] = useState("");
 
+  // Synchronize the form fields with the selected food or reset them for a new item.
   useEffect(() => {
     const timer = setTimeout(() => {
       if (food) {
@@ -51,6 +52,7 @@ export default function AdminFoodForm({ open, categories, food, loading = false,
     };
   }, [food, open]);
 
+  // Validate the required fields locally before delegating to the page action.
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");

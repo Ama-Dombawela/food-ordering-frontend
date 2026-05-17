@@ -16,6 +16,7 @@ type ApiError = {
   };
 };
 
+// Sign-in page that validates credentials and routes users after login.
 export default function SignIn() {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -25,6 +26,7 @@ export default function SignIn() {
   const [submitError, setSubmitError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  // Client-side validation prevents avoidable requests with invalid credentials.
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -69,6 +71,7 @@ export default function SignIn() {
         <p className="text-center text-xs uppercase tracking-[0.32em] text-teal-300">Welcome Back</p>
         <h1 className="mb-6 mt-3 text-center text-3xl font-bold text-teal-50">Sign In</h1>
 
+        {/* The form collects only the credentials required for authentication. */}
         <form className="space-y-4" onSubmit={handleSubmit} noValidate>
           <div>
             <label className="mb-1 block text-sm font-medium text-teal-200" htmlFor="email">
@@ -100,6 +103,7 @@ export default function SignIn() {
             {errors.password ? <p className="mt-1 text-sm text-rose-300">{errors.password}</p> : null}
           </div>
 
+          {/* Display authentication or API failures above the submit button. */}
           {submitError ? <p className="text-sm text-rose-300">{submitError}</p> : null}
 
           <button
@@ -111,6 +115,7 @@ export default function SignIn() {
           </button>
         </form>
 
+        {/* Secondary navigation provides a direct path to account registration. */}
         <p className="mt-6 text-center text-sm text-teal-200/80">
           Don&apos;t have an account?{" "}
           <Link className="font-medium text-teal-300 hover:text-teal-200" to="/signup">

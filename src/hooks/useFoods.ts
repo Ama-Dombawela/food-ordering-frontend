@@ -9,11 +9,13 @@ export function useFoods() {
   const [filtering, setFiltering] = useState(false);
   const [error, setError] = useState("");
   const [activeCategoryId, setActiveCategoryId] = useState<number | null>(null);
+  // Track request IDs to discard stale responses from rapid filter clicks.
   const requestIdRef = useRef(0);
 
   const loadFoods = useCallback(async (categoryId: number | null, showFullLoading: boolean) => {
     const requestId = ++requestIdRef.current;
 
+    // Show the full spinner only on initial load; filter requests show a subtle dimming.
     if (showFullLoading) {
       setLoading(true);
     } else {
@@ -25,6 +27,7 @@ export function useFoods() {
     try {
       const nextFoods = categoryId === null ? await getAllFoods() : await getFoodsByCategory(categoryId);
 
+      // Only update state if this request is still the latest (discard stale responses).
       if (requestId === requestIdRef.current) {
         setFoods(nextFoods);
         setActiveCategoryId(categoryId);

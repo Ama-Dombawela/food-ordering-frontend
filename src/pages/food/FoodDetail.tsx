@@ -21,6 +21,7 @@ export default function FoodDetail() {
   const [quantity, setQuantity] = useState(1);
   const imageSrc = food ? getFoodImage(food.name) : undefined;
 
+  // Resolve the selected food once the route parameter becomes available.
   useEffect(() => {
     const load = async () => {
       if (!Number.isFinite(foodId)) {
@@ -41,6 +42,7 @@ export default function FoodDetail() {
     void load();
   }, [foodId]);
 
+  // Apply the selected quantity only when the user explicitly adds the item.
   const handleAdd = async () => {
     if (!food) {
       return;
@@ -57,6 +59,8 @@ export default function FoodDetail() {
         {error ? <p className="rounded-3xl border border-rose-500/30 bg-rose-500/10 p-4 text-rose-200">{error}</p> : null}
 
         {!loading && !error && food ? (
+          <>
+            {/* Separate the image and detail panels to keep the item preview prominent. */}
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
             <Card className="overflow-hidden p-0">
               <div className="aspect-[4/3] overflow-hidden bg-gradient-to-br from-teal-900 to-teal-950">
@@ -86,6 +90,7 @@ export default function FoodDetail() {
                   <p className="text-2xl font-semibold text-white">{food.categoryId}</p>
                 </Card>
               </div>
+              {/* Keep quantity controls compact and adjacent to the add action. */}
               <div className="flex items-center gap-3">
                 <Button type="button" variant="secondary" onClick={() => setQuantity((current) => Math.max(1, current - 1))}>-</Button>
                 <span className="min-w-10 text-center text-lg font-semibold">{quantity}</span>
@@ -99,6 +104,7 @@ export default function FoodDetail() {
               </Link>
             </Card>
           </div>
+          </>
         ) : null}
       </main>
       <Footer />

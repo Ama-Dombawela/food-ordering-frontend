@@ -15,6 +15,7 @@ interface AdminCategoryFormProps {
 export default function AdminCategoryForm({ open, category, loading = false, onClose, onSubmit }: AdminCategoryFormProps) {
   const [name, setName] = useState("");
 
+  // Synchronize local state whenever the dialog opens for a different category.
   useEffect(() => {
     const timer = setTimeout(() => {
       setName(category?.name ?? "");
@@ -25,6 +26,7 @@ export default function AdminCategoryForm({ open, category, loading = false, onC
     };
   }, [category, open]);
 
+  // Reject empty names before invoking the parent submit handler.
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!name.trim()) {

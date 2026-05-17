@@ -23,12 +23,14 @@ export default function AdminFoodList() {
   const [editingFood, setEditingFood] = useState<FoodItemDTO | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<FoodItemDTO | null>(null);
 
+  // Load foods and categories together because the table requires both data sets.
   const load = async () => {
     setLoading(true);
     setError("");
 
     try {
       const [loadedFoods, loadedCategories] = await Promise.all([getAllFoods(), getAllCategories()]);
+  // The same modal handles both creation and editing, so the submit path branches here.
       setFoods(loadedFoods);
       setCategories(loadedCategories);
     } catch {
@@ -99,6 +101,7 @@ export default function AdminFoodList() {
         {loading ? <Spinner /> : null}
         {error ? <p className="rounded-3xl border border-rose-400/20 bg-rose-400/10 p-4 text-rose-200">{error}</p> : null}
 
+        {/* Keep the food table dense because administrators must review many fields at once. */}
         {!loading && !error ? (
           <Card className="overflow-x-auto p-0">
             <table className="min-w-full text-left text-sm">
@@ -137,6 +140,7 @@ export default function AdminFoodList() {
           </Card>
         ) : null}
 
+        {/* Use a separate modal to keep the create and edit form focused and reusable. */}
         <AdminFoodForm open={open} categories={categories} food={editingFood} loading={saving} onClose={() => setOpen(false)} onSubmit={handleSave} />
         <ConfirmModal
           open={deleteTarget !== null}

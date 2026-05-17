@@ -18,6 +18,7 @@ type ApiError = {
   };
 };
 
+// Sign-up page that validates user details before creating a customer account.
 export default function SignUp() {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -34,6 +35,7 @@ export default function SignUp() {
   const [submitError, setSubmitError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  // Client-side validation provides immediate feedback during registration.
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -94,6 +96,7 @@ export default function SignUp() {
       <div className="w-full max-w-md rounded-3xl border border-teal-800/70 bg-black/80 p-8 shadow-2xl shadow-black/60 backdrop-blur">
         <h1 className="mb-6 mt-3 text-center text-3xl font-bold text-teal-50">Create Account</h1>
 
+        {/* Registration collects only the fields required to create a customer account. */}
         <form className="space-y-4" onSubmit={handleSubmit} noValidate>
           <div>
             <label className="mb-1 block text-sm font-medium text-teal-200" htmlFor="name">
@@ -157,6 +160,7 @@ export default function SignUp() {
             ) : null}
           </div>
 
+          {/* Display server-side registration errors without clearing the form state. */}
           {submitError ? <p className="text-sm text-rose-300">{submitError}</p> : null}
 
           <button
@@ -168,6 +172,7 @@ export default function SignUp() {
           </button>
         </form>
 
+        {/* Provide a direct transition back to the sign-in flow. */}
         <p className="mt-6 text-center text-sm text-teal-200/80">
           Already have an account?{" "}
           <Link className="font-medium text-teal-300 hover:text-teal-200 hover:underline" to="/signin">

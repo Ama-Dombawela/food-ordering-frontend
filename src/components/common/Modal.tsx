@@ -14,11 +14,13 @@ export default function Modal({ open, title, onClose, children }: ModalProps) {
     return null;
   }
 
+  // Prevent clicks inside the dialog from closing the backdrop.
   const stopPropagation = (event: MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   };
 
   return (
+    // The backdrop closes the modal, while the dialog body remains interactive.
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm" onMouseDown={onClose}>
       <div onMouseDown={stopPropagation} className="max-h-[90vh] w-full max-w-2xl overflow-y-auto">
         <Card className="p-6">

@@ -16,6 +16,7 @@ export default function FoodCard({ food, onAddToCart }: FoodCardProps) {
 
   return (
     <Card className="group flex h-full flex-col overflow-hidden p-0">
+      {/* Display the food image when one is available, otherwise render a placeholder. */}
       <div className="aspect-[4/3] overflow-hidden bg-gradient-to-br from-teal-900 to-teal-950">
         {imageSrc ? (
           <img
@@ -27,6 +28,7 @@ export default function FoodCard({ food, onAddToCart }: FoodCardProps) {
           <div className="flex h-full items-center justify-center text-teal-300/70">Food Image</div>
         )}
       </div>
+      {/* Present the summary content and the primary actions below the image. */}
       <div className="flex flex-1 flex-col gap-4 p-5">
         <div className="flex items-start justify-between gap-3">
           <div>
@@ -39,6 +41,7 @@ export default function FoodCard({ food, onAddToCart }: FoodCardProps) {
           <span className="text-lg font-semibold text-teal-300">{formatCurrency(food.price)}</span>
           <Badge variant={statusVariant}>{formatStatus(food.status)}</Badge>
         </div>
+        {/* Details and cart actions are arranged side by side on wider screens. */}
         <div className="grid gap-3 sm:grid-cols-2">
           <Link to={`/food/${food.id}`} className="inline-flex items-center justify-center rounded-full border border-teal-700 px-5 py-3 text-sm font-semibold text-teal-200 transition hover:border-teal-400 hover:text-white">
             View Details

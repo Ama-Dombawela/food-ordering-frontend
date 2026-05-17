@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import landingBackground from "../assets/Landing/FoodOrderingSys.jpg";
 
+// Marketing landing page with CTA buttons to sign in or sign up.
 export default function Landing() {
   const navigate = useNavigate();
 
+  // Centralize navigation targets so the call-to-action buttons remain concise.
   const goToAuth = (target: "/signin" | "/signup") => {
     navigate(target);
   };
@@ -37,6 +39,7 @@ export default function Landing() {
               Explore a curated menu, place your order in seconds, and enjoy a dining experience designed around your comfort and convenience.
             </p>
 
+            {/* Primary calls to action keep the landing page focused on authentication entry points. */}
             <div className="flex flex-col gap-3 sm:flex-row">
               <button
                 type="button"

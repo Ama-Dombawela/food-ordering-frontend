@@ -9,6 +9,7 @@ import { Card } from "../../components/ui";
 // History page that displays the signed-in user's past orders.
 export default function OrderHistory() {
   const navigate = useNavigate();
+  // The orders hook centralizes data retrieval and loading state for this page.
   const { orders, loading, error } = useOrders();
 
   return (
@@ -23,6 +24,7 @@ export default function OrderHistory() {
         </div>
         {loading ? <Spinner /> : null}
         {error ? <p className="rounded-3xl border border-rose-500/30 bg-rose-500/10 p-4 text-rose-200">{error}</p> : null}
+        {/* Keep the empty, list, and error states visually distinct. */}
         {!loading && !error ? (
           orders.length === 0 ? (
             <Card>

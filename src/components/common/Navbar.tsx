@@ -6,6 +6,7 @@ import { ShoppingCart, UserCircle } from "lucide-react";
 
 const linkBase = "rounded-full px-4 py-2 text-sm font-medium transition";
 
+// Top navigation shell that switches links and profile actions by role.
 export default function Navbar() {
   const navigate = useNavigate();
   const { authUser, logout } = useAuth();
@@ -14,6 +15,7 @@ export default function Navbar() {
   const [profileOpen, setProfileOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
 
+  // Derive the visible navigation items from the authenticated role.
   const links = authUser?.role === "ADMIN"
     ? [
         { to: "/admin/foods", label: "Foods" },
@@ -33,6 +35,7 @@ export default function Navbar() {
     navigate("/signin");
   };
 
+  // Close the profile menu when the user clicks outside it or presses Escape.
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       const target = event.target as Node;
@@ -69,6 +72,8 @@ export default function Navbar() {
         </button>
 
         <div className={`${mobileOpen ? "flex" : "hidden"} flex-col gap-4 lg:flex lg:flex-1 lg:flex-row lg:items-center lg:justify-end`}>
+          
+          {/* Render the navigation links relevant to the current role. */}
           <nav className="flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center lg:justify-end">
             {links.map((link) => (
               <NavLink
@@ -101,9 +106,8 @@ export default function Navbar() {
             </button>
 
             {profileOpen ? (
+              // Keep profile actions grouped in a dedicated menu.
               <div className="absolute right-0 top-14 z-50 w-72 rounded-2xl border border-teal-800 bg-teal-950/95 p-4 shadow-xl shadow-teal-950/50 backdrop-blur">
-              
-
                 <div className="mt-4 grid gap-2">
                   <button
                     type="button"
