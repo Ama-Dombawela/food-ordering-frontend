@@ -1,6 +1,6 @@
 # Food Ordering Frontend
 
-A Vite + React + TypeScript frontend for a full-featured online food ordering platform. It communicates with the Food Ordering Backend REST API and handles all client-side logic including JWT-based authentication, role-based route protection, and a complete customer flow covering food browsing, cart management, order placement, and order history. Admin users get access to dedicated dashboards for managing foods, categories, orders, and users
+A Vite + React + TypeScript frontend for a full-featured online food ordering platform. It communicates with the Food Ordering Backend REST API and handles all client-side logic including JWT-based authentication, role-based route protection, and a complete customer flow covering food browsing, cart management, order placement, and order history. Admin users get access to dedicated dashboards for managing foods, categories, orders, and users.
 
 ## Tech Stack
 
@@ -9,6 +9,8 @@ A Vite + React + TypeScript frontend for a full-featured online food ordering pl
 - Axios
 - Tailwind CSS
 - Vite
+- lucide-react (icons)
+- react-hot-toast (notifications)
 
 ---
 
@@ -36,16 +38,73 @@ The app will be available at `http://localhost:5173`
 
 ---
 
+## Configuration
+
+The frontend connects to the backend at `http://localhost:8080` by default.
+If your backend runs on a different port, update the base URL in:
+`src/api/axiosInstance.ts`
+
+---
+
 ## Features
 
-- Sign in / Sign up / Forgot password
-- Browse and filter food items
+- Sign In / Sign Up
+- Browse and filter food items by category
 - Cart management and order placement
 - Order history and payment pages
-- User profile page
+- User profile page with account termination
 - Admin dashboards for foods, categories, orders, and users
 - JWT-based auth with protected and admin-only routes
+- Role-based redirection after login (ADMIN → dashboard, CUSTOMER → menu)
+- Toast notifications for user feedback
+- Confirm modals for destructive actions
 
+---
+
+## Authentication & Test Credentials
+
+### Admin Account
+Admin accounts cannot be created via the Sign Up page. The admin account must be inserted directly into the database.
+
+To log in as Admin use:
+
+| Field | Value |
+|-------|-------|
+| Email | admin@gmail.com |
+| Password | admin123 |
+
+### Customer Account
+To log in as a Customer, you can either:
+
+**Option 1 — Create a new account:**
+- Navigate to `/signup`
+- Enter your name, email, password and confirm password
+- All accounts created via Sign Up are automatically assigned the `CUSTOMER` role
+
+**Option 2 — Use the Admin dashboard:**
+- Sign in as Admin
+- Go to the Users section in the Admin dashboard
+- View all registered customer accounts and use any of their emails to log in
+
+> All new accounts registered through Sign Up are `CUSTOMER` accounts by default.
+
+---
+
+## Role-Based Access
+
+| Feature | CUSTOMER | ADMIN |
+|---------|----------|-------|
+| Browse menu | ✅ | ✅ |
+| Add to cart | ✅ | ❌ |
+| Place orders | ✅ | ❌ |
+| View order history | ✅ | ✅ |
+| User profile | ✅ | ❌ |
+| Manage foods | ❌ | ✅ |
+| Manage categories | ❌ | ✅ |
+| Manage users | ❌ | ✅ |
+| Manage orders | ❌ | ✅ |
+
+---
 
 ## Project Structure
 
@@ -64,18 +123,25 @@ food-ordering-frontend/
 |   |   |-- axiosInstance.ts
 |   |-- App.css
 |   |-- App.tsx
+|   |-- assets/
+|   |   |-- Home/
+|   |   |-- Landing/
 |   |-- components/
 |   |   |-- admin/
 |   |   |   |-- AdminCategoryCard.tsx
 |   |   |   |-- AdminFoodCard.tsx
 |   |   |   |-- AdminOrderCard.tsx
-|   |   |   `-- AdminUserCard.tsx
+|   |   |   |-- AdminUserCard.tsx
+|   |   |   `-- index.ts
 |   |   |-- auth/
 |   |   |   |-- SignInForm.tsx
-|   |   |   `-- SignUpForm.tsx
+|   |   |   |-- SignUpForm.tsx
+|   |   |   `-- index.ts
 |   |   |-- cart/
-|   |   |   `-- CartItem.tsx
+|   |   |   |-- CartItem.tsx
+|   |   |   `-- index.ts
 |   |   |-- common/
+|   |   |   |-- ConfirmModal.tsx
 |   |   |   |-- Footer.tsx
 |   |   |   |-- Modal.tsx
 |   |   |   |-- Navbar.tsx
@@ -83,13 +149,18 @@ food-ordering-frontend/
 |   |   |   `-- Spinner.tsx
 |   |   |-- food/
 |   |   |   |-- FoodCard.tsx
-|   |   |   `-- FoodFilter.tsx
+|   |   |   |-- FoodFilter.tsx
+|   |   |   `-- index.ts
+|   |   |-- icons/
 |   |   |-- layout/
-|   |   |   `-- PageHeader.tsx
+|   |   |   |-- PageHeader.tsx
+|   |   |   `-- index.ts
 |   |   |-- order/
-|   |   |   `-- OrderCard.tsx
+|   |   |   |-- OrderCard.tsx
+|   |   |   `-- index.ts
 |   |   |-- payment/
-|   |   |   `-- PaymentSummary.tsx
+|   |   |   |-- PaymentSummary.tsx
+|   |   |   `-- index.ts
 |   |   |-- routes/
 |   |   |   |-- AdminRoute.tsx
 |   |   |   `-- ProtectedRoute.tsx
@@ -133,8 +204,6 @@ food-ordering-frontend/
 |   |   |   `-- users/
 |   |   |       `-- AdminUserList.tsx
 |   |   |-- auth/
-|   |   |   |-- ForgotPassword.tsx
-|   |   |   |-- ResetPassword.tsx
 |   |   |   |-- SignIn.tsx
 |   |   |   `-- SignUp.tsx
 |   |   |-- cart/
@@ -166,8 +235,10 @@ food-ordering-frontend/
 |   |   |-- Payment.ts
 |   |   `-- User.ts
 |   `-- utils/
+|       |-- foodImage.ts
 |       |-- formatCurrency.ts
 |       |-- formatDate.ts
+|       |-- formatStatus.ts
 |       |-- index.ts
 |       `-- validators.ts
 |-- tailwind.config.js
