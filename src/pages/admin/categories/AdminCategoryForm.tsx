@@ -16,7 +16,13 @@ export default function AdminCategoryForm({ open, category, loading = false, onC
   const [name, setName] = useState("");
 
   useEffect(() => {
-    setName(category?.name ?? "");
+    const timer = setTimeout(() => {
+      setName(category?.name ?? "");
+    }, 0);
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, [category, open]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {

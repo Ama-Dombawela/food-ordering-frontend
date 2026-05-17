@@ -6,7 +6,7 @@ import { Badge, Card } from "../../../components/ui";
 import { getAllUsers } from "../../../services/userService";
 import { getOrdersByUser, updateOrderStatus } from "../../../services/orderService";
 import type { OrderDTO, OrderStatus, UserDTO } from "../../../types";
-import { formatCurrency, formatDate } from "../../../utils";
+import { formatCurrency, formatDate, formatStatus } from "../../../utils";
 
 // Admin order screen that aggregates orders across all users.
 export default function AdminOrderList() {
@@ -30,7 +30,13 @@ export default function AdminOrderList() {
   };
 
   useEffect(() => {
-    void load();
+    const timer = setTimeout(() => {
+      void load();
+    }, 0);
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
 
   const handleStatusChange = async (orderId: number, status: OrderStatus) => {
@@ -39,16 +45,16 @@ export default function AdminOrderList() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent text-teal-100">
+    <div className="flex flex-col min-h-screen bg-transparent text-teal-100">
       <Navbar />
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="flex-1 mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <p className="text-sm uppercase tracking-[0.35em] text-teal-300">Admin Orders</p>
           <h1 className="mt-2 text-4xl font-semibold text-white">Manage all orders</h1>
         </div>
 
         {loading ? <Spinner /> : null}
-        {error ? <p className="rounded-3xl border border-rose-500/30 bg-rose-500/10 p-4 text-rose-200">{error}</p> : null}
+        {error ? <p className="rounded-3xl border border-rose-400/20 bg-rose-400/10 p-4 text-rose-200">{error}</p> : null}
 
         {!loading && !error ? (
           <Card className="overflow-x-auto p-0">
@@ -69,7 +75,7 @@ export default function AdminOrderList() {
                     <td className="px-4 py-3 text-white">{order.id}</td>
                     <td className="px-4 py-3 text-teal-200/80">{order.userId}</td>
                     <td className="px-4 py-3 text-teal-200/80">{formatCurrency(order.totalAmount)}</td>
-                    <td className="px-4 py-3"><Badge variant={order.status === "DELIVERED" ? "green" : order.status === "PREPARING" ? "yellow" : order.status === "PLACED" ? "blue" : "red"}>{order.status}</Badge></td>
+                    <td className="px-4 py-3"><Badge variant={order.status === "DELIVERED" ? "green" : order.status === "PREPARING" ? "yellow" : order.status === "PLACED" ? "blue" : "red"}>{formatStatus(order.status)}</Badge></td>
                     <td className="px-4 py-3 text-teal-200/80">{formatDate(order.orderDate)}</td>
                     <td className="px-4 py-3">
                       <select value={order.status} onChange={(event) => void handleStatusChange(order.id, event.target.value as OrderStatus)} className="rounded-2xl border border-teal-700 bg-teal-950/70 px-4 py-3 text-sm text-teal-50 outline-none">

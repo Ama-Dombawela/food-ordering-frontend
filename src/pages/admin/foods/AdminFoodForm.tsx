@@ -30,19 +30,25 @@ export default function AdminFoodForm({ open, categories, food, loading = false,
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (food) {
-      setName(food.name);
-      setDescription(food.description);
-      setPrice(String(food.price));
-      setCategoryId(String(food.categoryId));
-      setStatus(food.status);
-    } else {
-      setName(emptyState.name);
-      setDescription(emptyState.description);
-      setPrice(emptyState.price);
-      setCategoryId(emptyState.categoryId);
-      setStatus(emptyState.status);
-    }
+    const timer = setTimeout(() => {
+      if (food) {
+        setName(food.name);
+        setDescription(food.description);
+        setPrice(String(food.price));
+        setCategoryId(String(food.categoryId));
+        setStatus(food.status);
+      } else {
+        setName(emptyState.name);
+        setDescription(emptyState.description);
+        setPrice(emptyState.price);
+        setCategoryId(emptyState.categoryId);
+        setStatus(emptyState.status);
+      }
+    }, 0);
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, [food, open]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -87,10 +93,10 @@ export default function AdminFoodForm({ open, categories, food, loading = false,
           <span className="text-sm font-medium text-teal-200">Status</span>
           <select value={status} onChange={(event) => setStatus(event.target.value as FoodItemStatus)} className="w-full rounded-2xl border border-teal-700 bg-teal-950/60 px-4 py-3 text-teal-50 outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20">
             <option value="AVAILABLE">AVAILABLE</option>
-            <option value="OUT_OF_STOCK">OUT_OF_STOCK</option>
+            <option value="OUT_OF_STOCK">OUT OF STOCK</option>
           </select>
         </label>
-        {error ? <p className="md:col-span-2 text-sm text-rose-300">{error}</p> : null}
+        {error ? <p className="md:col-span-2 text-sm text-rose-200">{error}</p> : null}
         <div className="md:col-span-2 flex items-center justify-end gap-3">
           <Button type="button" variant="secondary" onClick={onClose}>Cancel</Button>
           <Button type="submit" loading={loading}>{food ? "Save Food" : "Add Food"}</Button>
