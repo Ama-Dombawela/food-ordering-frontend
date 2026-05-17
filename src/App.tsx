@@ -4,8 +4,6 @@ import AdminRoute from "./components/routes/AdminRoute";
 import Landing from "./pages/Landing";
 import SignIn from "./pages/auth/SignIn";
 import SignUp from "./pages/auth/SignUp";
-import ForgotPassword from "./pages/auth/ForgotPassword";
-import ResetPassword from "./pages/auth/ResetPassword";
 import FoodList from "./pages/food/FoodList";
 import FoodDetail from "./pages/food/FoodDetail";
 import Cart from "./pages/cart/Cart";
@@ -24,11 +22,9 @@ export default function App() {
       <Route path="/" element={<Landing />} />
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
 
       <Route element={<ProtectedRoute />}>
-        <Route path="/home" element={<FoodList />} />
+        <Route path="/menu" element={<FoodList />} />
         <Route path="/foods" element={<FoodList />} />
         <Route path="/food/:id" element={<FoodDetail />} />
         <Route path="/cart" element={<Cart />} />
