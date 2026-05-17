@@ -20,7 +20,7 @@ export function Button({
   const variantClasses = {
     primary: "bg-teal-500 text-teal-50 hover:bg-teal-400 shadow-lg shadow-teal-950/35",
     secondary: "border border-teal-700 bg-teal-950/70 text-teal-100 hover:bg-teal-900",
-    danger: "bg-rose-600 text-white hover:bg-rose-500",
+    danger: "rounded-xl border border-rose-400/40 bg-transparent text-rose-100 hover:bg-rose-500/20 hover:text-rose-50 transition",
   };
 
   return (

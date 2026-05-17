@@ -11,11 +11,11 @@ export const Table: React.FC<TableProps> = ({ headers, rows, className = '' }) =
     <div className={`overflow-x-auto ${className}`}>
       <table className="w-full border-collapse">
         <thead>
-          <tr className="border-b border-teal-800 bg-teal-950/80">
+          <tr className="border-b border-black/30 bg-black/80">
             {headers.map((header, idx) => (
               <th
                 key={idx}
-                className="px-4 py-3 text-left text-sm font-semibold text-teal-200"
+                className="px-4 py-3 text-left text-sm font-semibold text-teal-50"
               >
                 {header}
               </th>
@@ -26,10 +26,10 @@ export const Table: React.FC<TableProps> = ({ headers, rows, className = '' }) =
           {rows.map((row, rowIdx) => (
             <tr
               key={rowIdx}
-              className="border-b border-teal-900/70 transition-colors hover:bg-teal-950/70"
+              className="border-b border-black/20 transition-colors hover:bg-black/70"
             >
               {row.map((cell, cellIdx) => (
-                <td key={cellIdx} className="px-4 py-3 text-sm text-teal-200/80">
+                <td key={cellIdx} className="px-4 py-3 text-sm text-teal-100">
                   {cell}
                 </td>
               ))}

@@ -9,7 +9,7 @@ interface BadgeProps {
 export function Badge({ variant = "neutral", children, className = "" }: BadgeProps) {
   const variantClasses = {
     green: "bg-emerald-500/15 text-emerald-300 ring-emerald-500/30",
-    red: "bg-rose-500/15 text-rose-300 ring-rose-500/30",
+    red: "bg-rose-400/12 text-rose-200 ring-rose-400/20",
     yellow: "bg-teal-500/15 text-teal-200 ring-teal-500/40",
     blue: "bg-teal-500/15 text-teal-200 ring-teal-500/40",
     neutral: "bg-teal-950/70 text-teal-200 ring-teal-800",
