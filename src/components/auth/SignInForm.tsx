@@ -20,7 +20,7 @@ export default function SignInForm({ onSubmit, loading = false, error }: SignInF
   return (
     <Card>
       <form className="space-y-4" onSubmit={handleSubmit} noValidate>
-        <Input label="Email" type="email" placeholder="you@example.com" value={email} onChange={(event) => setEmail(event.target.value)} />
+        <Input label="Email" type="email" placeholder="Enter your email" value={email} onChange={(event) => setEmail(event.target.value)} />
         <Input label="Password" type="password" placeholder="Enter your password" value={password} onChange={(event) => setPassword(event.target.value)} />
         {error ? <p className="text-sm text-rose-300">{error}</p> : null}
         <Button type="submit" loading={loading} fullWidth>

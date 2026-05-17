@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../../services/authService";
-import type { Role } from "../../types";
+import { useAuth } from "../../context/AuthContext";
 
 type FieldErrors = {
   name: string;
@@ -20,11 +20,11 @@ type ApiError = {
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState<Role>("CUSTOMER");
   const [errors, setErrors] = useState<FieldErrors>({
     name: "",
     email: "",
@@ -78,8 +78,9 @@ export default function SignUp() {
     setIsLoading(true);
 
     try {
-      await registerUser(name.trim(), email, password, role);
-      navigate("/signin");
+      const authUser = await registerUser(name.trim(), email, password, "CUSTOMER");
+      login(authUser.token, authUser);
+      navigate("/profile");
     } catch (err: unknown) {
       const apiError = err as ApiError;
       setSubmitError(apiError.response?.data?.message ?? "Registration failed. Please try again.");
@@ -90,8 +91,7 @@ export default function SignUp() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-transparent px-4 py-8">
-      <div className="w-full max-w-md rounded-3xl border border-teal-800/70 bg-teal-950/70 p-8 shadow-2xl shadow-teal-950/45 backdrop-blur">
-        <p className="text-center text-xs uppercase tracking-[0.32em] text-teal-300">Join The App</p>
+      <div className="w-full max-w-md rounded-3xl border border-teal-800/70 bg-black/80 p-8 shadow-2xl shadow-black/60 backdrop-blur">
         <h1 className="mb-6 mt-3 text-center text-3xl font-bold text-teal-50">Create Account</h1>
 
         <form className="space-y-4" onSubmit={handleSubmit} noValidate>
@@ -105,7 +105,7 @@ export default function SignUp() {
               value={name}
               onChange={(event) => setName(event.target.value)}
               className="w-full rounded-xl border border-teal-700 bg-teal-950/60 px-4 py-3 text-teal-50 outline-none transition placeholder:text-teal-300/60 focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20"
-              placeholder="Your name"
+              placeholder="Enter your full name"
             />
             {errors.name ? <p className="mt-1 text-sm text-rose-300">{errors.name}</p> : null}
           </div>
@@ -120,7 +120,7 @@ export default function SignUp() {
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               className="w-full rounded-xl border border-teal-700 bg-teal-950/60 px-4 py-3 text-teal-50 outline-none transition placeholder:text-teal-300/60 focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20"
-              placeholder="you@example.com"
+              placeholder="Enter your email"
             />
             {errors.email ? <p className="mt-1 text-sm text-rose-300">{errors.email}</p> : null}
           </div>
@@ -135,7 +135,7 @@ export default function SignUp() {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               className="w-full rounded-xl border border-teal-700 bg-teal-950/60 px-4 py-3 text-teal-50 outline-none transition placeholder:text-teal-300/60 focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20"
-              placeholder="Minimum 6 characters"
+              placeholder="Enter your password"
             />
             {errors.password ? <p className="mt-1 text-sm text-rose-300">{errors.password}</p> : null}
           </div>
@@ -150,26 +150,11 @@ export default function SignUp() {
               value={confirmPassword}
               onChange={(event) => setConfirmPassword(event.target.value)}
               className="w-full rounded-xl border border-teal-700 bg-teal-950/60 px-4 py-3 text-teal-50 outline-none transition placeholder:text-teal-300/60 focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20"
-              placeholder="Re-enter your password"
+              placeholder="Confirm your password"
             />
             {errors.confirmPassword ? (
               <p className="mt-1 text-sm text-rose-300">{errors.confirmPassword}</p>
             ) : null}
-          </div>
-
-          <div>
-            <label className="mb-1 block text-sm font-medium text-teal-200" htmlFor="role">
-              Role
-            </label>
-            <select
-              id="role"
-              value={role}
-              onChange={(event) => setRole(event.target.value as Role)}
-              className="w-full rounded-xl border border-teal-700 bg-teal-950/60 px-4 py-3 text-teal-50 outline-none transition focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20"
-            >
-              <option value="CUSTOMER">CUSTOMER</option>
-              <option value="ADMIN">ADMIN</option>
-            </select>
           </div>
 
           {submitError ? <p className="text-sm text-rose-300">{submitError}</p> : null}
