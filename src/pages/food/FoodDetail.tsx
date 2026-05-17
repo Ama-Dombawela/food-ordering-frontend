@@ -7,7 +7,8 @@ import { Button, Badge, Card } from "../../components/ui";
 import { useCart } from "../../hooks/useCart";
 import { getFoodById } from "../../services/foodService";
 import type { FoodItemDTO } from "../../types";
-import { formatCurrency } from "../../utils";
+import { formatCurrency, formatStatus } from "../../utils";
+import { getFoodImage } from "../../utils/foodImage";
 
 // Detail page for a single menu item with quantity selection.
 export default function FoodDetail() {
@@ -18,6 +19,7 @@ export default function FoodDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const imageSrc = food ? getFoodImage(food.name) : undefined;
 
   useEffect(() => {
     const load = async () => {
@@ -48,17 +50,21 @@ export default function FoodDetail() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent text-teal-100">
+    <div className="flex flex-col min-h-screen bg-transparent text-teal-100">
       <Navbar />
-      <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="flex-1 mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         {loading ? <Spinner /> : null}
         {error ? <p className="rounded-3xl border border-rose-500/30 bg-rose-500/10 p-4 text-rose-200">{error}</p> : null}
 
         {!loading && !error && food ? (
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
             <Card className="overflow-hidden p-0">
-              <div className="flex aspect-[4/3] items-center justify-center bg-gradient-to-br from-teal-900 to-teal-950 text-teal-300/70">
-                Food Image
+              <div className="aspect-[4/3] overflow-hidden bg-gradient-to-br from-teal-900 to-teal-950">
+                {imageSrc ? (
+                  <img src={imageSrc} alt={food.name} className="h-full w-full object-cover" />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-teal-300/70">Food Image</div>
+                )}
               </div>
             </Card>
             <Card className="space-y-5">
@@ -67,7 +73,7 @@ export default function FoodDetail() {
                   <p className="text-sm uppercase tracking-[0.35em] text-teal-300">Food Detail</p>
                   <h1 className="mt-2 text-4xl font-semibold text-white">{food.name}</h1>
                 </div>
-                <Badge variant={food.status === "AVAILABLE" ? "green" : "red"}>{food.status}</Badge>
+                <Badge variant={food.status === "AVAILABLE" ? "green" : "red"}>{formatStatus(food.status)}</Badge>
               </div>
               <p className="text-teal-200/80">{food.description}</p>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -88,7 +94,7 @@ export default function FoodDetail() {
               <Button type="button" onClick={() => void handleAdd()} fullWidth disabled={food.status !== "AVAILABLE"}>
                 Add to Cart
               </Button>
-              <Link className="inline-block text-sm text-teal-200/80 hover:text-white" to="/home">
+              <Link className="inline-block text-sm text-teal-200/80 hover:text-white" to="/menu">
                 Back to menu
               </Link>
             </Card>

@@ -5,6 +5,7 @@ import Footer from "../../components/common/Footer";
 import Spinner from "../../components/common/Spinner";
 import { FoodCard, FoodFilter } from "../../components/food";
 import { Card } from "../../components/ui";
+import { ShoppingCart } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { useCategories } from "../../hooks/useCategories";
 import { useCart } from "../../hooks/useCart";
@@ -14,7 +15,7 @@ import { useFoods } from "../../hooks/useFoods";
 export default function FoodList() {
   const navigate = useNavigate();
   const { isAdmin } = useAuth();
-  const { foods, loading, error, activeCategoryId, filterByCategory } = useFoods();
+  const { foods, loading, filtering, error, activeCategoryId, filterByCategory } = useFoods();
   const { categories } = useCategories();
   const { addItem } = useCart();
   const [addError, setAddError] = useState("");
@@ -36,34 +37,35 @@ export default function FoodList() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent text-teal-100">
+    <div className="flex flex-col min-h-screen bg-transparent text-teal-100">
       <Navbar />
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="flex-1 mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-sm uppercase tracking-[0.35em] text-teal-300">Menu</p>
             <h1 className="mt-2 text-4xl font-semibold text-white">Choose your next meal</h1>
           </div>
-          <button type="button" onClick={() => navigate("/cart")} className="text-sm text-teal-200 underline-offset-4 hover:text-white hover:underline">
-            Go to cart
+          <button type="button" onClick={() => navigate("/cart")} className="inline-flex items-center gap-2 text-sm text-teal-200 underline-offset-4 hover:text-white hover:underline">
+            <ShoppingCart className="h-4 w-4 text-teal-200" />
+            <span>Go to cart</span>
           </button>
         </div>
 
-        <Card className="mb-6 space-y-4">
-          <FoodFilter categories={categories} activeCategoryId={activeCategoryId} onChange={filterByCategory} />
+        <Card className={`mb-6 space-y-4 transition-opacity duration-200 ${filtering ? "opacity-80" : "opacity-100"}`}>
+          <FoodFilter categories={categories} activeCategoryId={activeCategoryId} loading={filtering} onChange={filterByCategory} />
           {addError ? <p className="text-sm text-rose-300">{addError}</p> : null}
         </Card>
 
         {loading ? <Spinner /> : null}
         {error ? <p className="rounded-3xl border border-rose-500/30 bg-rose-500/10 p-4 text-rose-200">{error}</p> : null}
 
-        {!loading && !error ? (
+        {!error ? (
           foods.length === 0 ? (
             <Card>
               <p className="text-teal-200/80">No food items found.</p>
             </Card>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <div className={`grid gap-6 transition-opacity duration-300 md:grid-cols-2 xl:grid-cols-3 ${filtering ? "opacity-80" : "opacity-100"}`}>
               {foods.map((food) => (
                 <FoodCard key={food.id} food={food} onAddToCart={handleAddToCart} />
               ))}
